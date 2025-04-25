@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="tb">
+    <button id="but">click</button>
+    <table id="table">
+        <thead>
+            <th>Name</th>
+            <th>Temp</th>
+            <th>Humid</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <div>
+        <canvas id="myChart"></canvas>
+      </div>
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      
+      <script>
+        const but =document.getElementById('but')
+        but.addEventListener(('click'),async ()=>{
+            const tb=document.getElementById('tb')
+        const res=await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${tb.value}&appid=cd4fb735e496077a7e0aa77514adf5e0`)
+        const datas= await res.json()
+        const ctx = document.getElementById('myChart');
+      
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['humidity', 'max_temp', 'min_temp'],
+            datasets: [{
+              label: '# of Votes',
+              data: [datas.max_temp, datas.min_temp, datas.humidity],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+    })
+    
+      </script>
+       
+    <script>
+        async function weather(){
+            try{
+                const but =document.getElementById('but')
+                but.addEventListener(('click'),async ()=>{
+                    const tb= document.getElementById('tb')
+                    url=''
+                    const res=await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${tb.value}&appid=cd4fb735e496077a7e0aa77514adf5e0`)
+                    const data= await res.json()
+                    const tableBody = document.querySelector('#table tbody')
+    
+                    
+                        let t = document.createElement('tr')
+                        t.innerHTML=`
+                        <td>${tb.value}</td>
+                        <td>${data.main.humidity}</td>
+                        <td>${data.main.temp}</td>
+                        `
+                        tableBody.appendChild(t)
+                    
+                })
+            }
+            catch(err){
+                console.log(err)
+            }
+        }
+        weather()
+
+    </script>
+</body>
+</html>
